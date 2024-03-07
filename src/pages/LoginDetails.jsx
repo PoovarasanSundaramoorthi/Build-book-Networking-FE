@@ -1,26 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
-import ApiService from '../services/index';
-import { useNavigate } from 'react-router-dom';
-function Login() {
+
+function LoginDetails() {
     const [user, setUser] = useState([]);
     const [profile, setProfile] = useState([]);
-    const navigate = useNavigate();
+
     const login = useGoogleLogin({
-        onSuccess: (codeResponse) => {
-            setUser(codeResponse); CreateGoogleUser(codeResponse);
-        },
+        onSuccess: (codeResponse) => setUser(codeResponse),
         onError: (error) => console.log('Login Failed:', error)
     });
-
-    const CreateGoogleUser = (codeResponse) => {
-        ApiService.CreateUser(codeResponse).then((res) => {
-            if (res.status === 200) {
-                navigate(`/home-page/${res.data.user.id}`);
-            }
-        });
-    };
 
     useEffect(
         () => {
@@ -52,9 +41,9 @@ function Login() {
             <h2>React Google Login</h2>
             <br />
             <br />
-            {profile.length > 0 ? (
+            {profile ? (
                 <div>
-                    <img src={profile.picture} alt="user image" />
+                    <img src={profile?.picture} alt="user image" />
                     <h3>User Logged in</h3>
                     <p>Name: {profile.name}</p>
                     <p>Email Address: {profile.email}</p>
@@ -67,5 +56,7 @@ function Login() {
             )}
         </div>
     );
+
 }
-export default Login;
+
+export default LoginDetails;
